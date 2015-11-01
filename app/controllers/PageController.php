@@ -20,7 +20,7 @@ class PageController extends BaseController {
 			'headers' => [
 	        	'Content-Type' => 'application/json',
 	        	'mcd_apikey'     => 'lvi2NZIVT42AytkqXm6E2BApBU369jpp',
-	        	'Token'      => $this->getSignInSessionToken(),
+	        	'Token'      => $this->getSignInSessionToken($email),
 	        	'MarketId' => 'US'
 	    	],
 	    	'verify' => false,
@@ -39,42 +39,20 @@ class PageController extends BaseController {
 		// 	$this->doRegisterAuto($string);
 		// }
 
-		$data['barcodeData'] = "";
-		$data['aztec'] = "";
-		$data['code'] = "";
-
+		$data = "";
 		// Cache token
-
-		//echo $this->getSignInSessionToken();
-		$arr = $this->getAvailableOffers("test@api20.com");
-//var_dump($arr);
-		// $client = new \GuzzleHttp\Client();
-		// $r = $client->request('POST', 'https://api.mcd.com//v3//customer/offer/redemption', [
-		// 	'headers' => [
-  //       		'Content-Type' => 'application/json',
-  //       		'mcd_apikey'     => 'lvi2NZIVT42AytkqXm6E2BApBU369jpp',
-  //       		'Token'      => $this->getSessionToken(),
-  //       		'MarketId' => 'US'
-  //   		],
-  //   		'verify' => false,
-  //   		'body' => '{"marketId":"US","application":"MOT","languageName":"en-US","platform":"iphone","offersIds":["41254827"],"storeId":26511,"userName":"test@api20.com"}'
-		// ]);
-		// //var_dump( (string) $r->getBody());
-
-		// $arr = json_decode((string) $r->getBody(), true);
-		// $data['barcodeData'] = $arr['Data']['BarCodeContent'];
-		// $data['aztec'] = $this->generateAztec($data['barcodeData']);
-		// $data['code'] = $arr['Data']['RandomCode'];
+		$arr = $this->getAvailableOffers("test@api14.com");
+		//var_dump($arr);
 		return View::make('home', compact('data', 'arr'));
 	}
 	public function getAvailableOffers($email) {
-		$email = str_replace("@", "%40", $email);
-		$url = 'https://api.mcd.com/v3//customer/offer?marketId=US&application=MOT&languageName=en-US&platform=iphone&userName='.$email.'';
+		$formatted_email = str_replace("@", "%40", $email);
+		$url = 'https://api.mcd.com/v3//customer/offer?marketId=US&application=MOT&languageName=en-US&platform=iphone&userName='.$formatted_email.'';
 		$client = new \GuzzleHttp\Client();
 		$r = $client->request('GET', $url, [
 			'headers' => [
 	     		'mcd_apikey' => 'lvi2NZIVT42AytkqXm6E2BApBU369jpp',
-	     		'Token' => $this->getSignInSessionToken(),
+	     		'Token' => $this->getSignInSessionToken($email),
 	     		'MarketId' => 'US'
 	    	],
 	    	'verify' => false,
@@ -104,9 +82,9 @@ class PageController extends BaseController {
 		}
 		return $token;
 	}
-	public function getSignInSessionToken() {
-		if (Cache::has('signinToken')) {
-			$token = Cache::get('signinToken');
+	public function getSignInSessionToken($email) {
+		if (Cache::has($email)) {
+			$token = Cache::get($email);
 		}
 		else {	
 			$client = new \GuzzleHttp\Client();
@@ -117,12 +95,12 @@ class PageController extends BaseController {
 	        		'MarketId' => 'US'
 	    		],
 	    		'verify' => false,
-	    		'body' => '{"marketId":"US","application":"MOT","languageName":"en-US","platform":"iphone","versionId":"0.0.1.I","nonce":"happybaby","hash":"ODUwNjEzMmY3MGRkM2ZlMTQzMjE0YmJlYzllNWNjZjI\u003d","userName":"test@api20.com","password":"helloworlD1","newPassword":null}'
+	    		'body' => '{"marketId":"US","application":"MOT","languageName":"en-US","platform":"iphone","versionId":"0.0.1.I","nonce":"happybaby","hash":"ODUwNjEzMmY3MGRkM2ZlMTQzMjE0YmJlYzllNWNjZjI\u003d","userName":"'.$email.'","password":"helloworlD1","newPassword":null}'
 			]);
 			$arr = json_decode((string) $r->getBody(), true);
-			$expiresAt = Carbon::now()->addMinutes(10);
+			$expiresAt = Carbon::now()->addMinutes(5);
 			$token = $arr['Data']['AccessData']['Token'];
-			Cache::put('signinToken', $token, $expiresAt);
+			Cache::put($email, $token, $expiresAt);
 		}
 		return $token;
 	}

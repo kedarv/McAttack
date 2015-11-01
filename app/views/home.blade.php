@@ -7,7 +7,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		$.ajax({
 			url: "{{action('PageController@generateCoupon')}}",
-			data: {email: "test@api20.com", id: $(this).data('id')},
+			data: {email: "test@api14.com", id: $(this).data('id')},
 			type: "POST",
 			beforeSend: function(request) {
 				return request.setRequestHeader('X-CSRF-Token', $("meta[name='token']").attr('content'));
