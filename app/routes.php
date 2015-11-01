@@ -15,3 +15,4 @@ Route::get('/', 'PageController@home');
 Route::get('register', 'PageController@register');
 Route::post('doRegisterManual', 'PageController@doRegisterManual');
 Route::get('login', 'PageController@login');
+Route::post('generateCoupon', 'PageController@generateCoupon');
