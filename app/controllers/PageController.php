@@ -37,84 +37,80 @@ class PageController extends BaseController {
 		// $data['code'] = $arr['Data']['RandomCode'];
 		return View::make('home', compact('data'));
 	}
-	public function register() {
-		$data['title'] = "Register";
-		return View::make('user.register', compact('data'));
-	}
+
 	public function doRegisterAuto($string) {
-	    		$client = new \GuzzleHttp\Client();
+	    $client = new \GuzzleHttp\Client();
 
-	    		$body = '{
-	"marketId": "US",
-	"application": "MOT",
-	"languageName": "en-US",
-	"platform": "iphone",
-	"userName": "'.$string.'",
-	"password": "helloworlD1",
-	"firstName": "TestFirst",
-	"lastName": "TestLast",
-	"nickName": null,
-	"mobileNumber": "",
-	"emailAddress": "'.$string.'",
-	"isPrivacyPolicyAccepted": true,
-	"preferredNotification": 1,
-	"receivePromotions": true,
-	"cardItems": [],
-	"accountItems": [],
-	"zipCode": "49706",
-	"optInForCommunicationChannel": false,
-	"optInForSurveys": false,
-	"optInForProgramChanges": false,
-	"optInForContests": false,
-	"optInForOtherMarketingMessages": false,
-	"notificationPreferences": {
-		"AppNotificationPreferences_OfferExpirationOption": 0,
-		"EmailNotificationPreferences_LimitedTimeOffers": false,
-		"AppNotificationPreferences_Enabled": false,
-		"EmailNotificationPreferences_EverydayOffers": false,
-		"EmailNotificationPreferences_YourOffers": false,
-		"AppNotificationPreferences_YourOffers": false,
-		"AppNotificationPreferences_PunchcardOffers": false,
-		"AppNotificationPreferences_LimitedTimeOffers": false,
-		"EmailNotificationPreferences_OfferExpirationOption": 0,
-		"EmailNotificationPreferences_Enabled": false,
-		"EmailNotificationPreferences_PunchcardOffers": false,
-		"AppNotificationPreferences_EverydayOffers": false
-	},
-	"preferredOfferCategories": [],
-	"subscribedToOffer": true,
-	"isActive": true
-}';
+	    $body = '{
+			"marketId": "US",
+			"application": "MOT",
+			"languageName": "en-US",
+			"platform": "iphone",
+			"userName": "'.$string.'",
+			"password": "helloworlD1",
+			"firstName": "TestFirst",
+			"lastName": "TestLast",
+			"nickName": null,
+			"mobileNumber": "",
+			"emailAddress": "'.$string.'",
+			"isPrivacyPolicyAccepted": true,
+			"preferredNotification": 1,
+			"receivePromotions": true,
+			"cardItems": [],
+			"accountItems": [],
+			"zipCode": "49706",
+			"optInForCommunicationChannel": false,
+			"optInForSurveys": false,
+			"optInForProgramChanges": false,
+			"optInForContests": false,
+			"optInForOtherMarketingMessages": false,
+			"notificationPreferences": {
+				"AppNotificationPreferences_OfferExpirationOption": 0,
+				"EmailNotificationPreferences_LimitedTimeOffers": false,
+				"AppNotificationPreferences_Enabled": false,
+				"EmailNotificationPreferences_EverydayOffers": false,
+				"EmailNotificationPreferences_YourOffers": false,
+				"AppNotificationPreferences_YourOffers": false,
+				"AppNotificationPreferences_PunchcardOffers": false,
+				"AppNotificationPreferences_LimitedTimeOffers": false,
+				"EmailNotificationPreferences_OfferExpirationOption": 0,
+				"EmailNotificationPreferences_Enabled": false,
+				"EmailNotificationPreferences_PunchcardOffers": false,
+				"AppNotificationPreferences_EverydayOffers": false
+			},
+			"preferredOfferCategories": [],
+			"subscribedToOffer": true,
+			"isActive": true
+		}';
 
-				$r = $client->request('POST', 'https://api.mcd.com/v3/customer/registration', [
-					'headers' => [
-		        		'Content-Type' => 'application/json',
-		        		'mcd_apikey'     => 'lvi2NZIVT42AytkqXm6E2BApBU369jpp',
-		        		'Token'      => '9efcc6dc92eb4fdf9eb6e8803deceffd',
-		        		'MarketId' => 'US'
-		    		],
-		    		'verify' => false,
-		    		'body' => $body
-				]);
+		$r = $client->request('POST', 'https://api.mcd.com/v3/customer/registration', [
+			'headers' => [
+				'Content-Type' => 'application/json',
+		  		'mcd_apikey'     => 'lvi2NZIVT42AytkqXm6E2BApBU369jpp',
+		  		'Token'      => '9efcc6dc92eb4fdf9eb6e8803deceffd',
+		  		'MarketId' => 'US'
+		 	],
+			'verify' => false,
+			'body' => $body
+		]);
 
-				$arr = json_decode((string) $r->getBody(), true);
-				if($arr['ResultCode'] == 1) {
-					$account = new Account;
-		    		$account->firstname = "TestFirst";
-		    		$account->lastname = "TestLast";
-		    		$account->zipcode = "47906";
-		    		$account->email = $string;
-		    		$account->password = "helloworlD1";
-		    		$account->save();
-	    			$response = array('status' => 'success', 'text' => 'Success');
-	    		}
-	    		else {
-	    			$response = array('status' => 'danger', 'text' => 'MCD API error');
-	    		}
-	    	
-	    	return Response::json($response); 
-	    	exit();
-    	
+		$arr = json_decode((string) $r->getBody(), true);
+		if($arr['ResultCode'] == 1) {
+			$account = new Account;
+			$account->firstname = "TestFirst";
+			$account->lastname = "TestLast";
+			$account->zipcode = "47906";
+			$account->email = $string;
+			$account->password = "helloworlD1";
+			$account->save();
+	    	$response = array('status' => 'success', 'text' => 'Success');
+	    }
+	    else {
+	    	$response = array('status' => 'danger', 'text' => 'MCD API error');
+	    }
+		
+		return Response::json($response); 
+		exit();	
 	}
 	
 	public function doRegisterManual() {
@@ -144,46 +140,46 @@ class PageController extends BaseController {
 	    		$client = new \GuzzleHttp\Client();
 
 	    		$body = '{
-	"marketId": "US",
-	"application": "MOT",
-	"languageName": "en-US",
-	"platform": "iphone",
-	"userName": "'.Input::get('email').'",
-	"password": "helloworlD1",
-	"firstName": "'.Input::get('firstname').'",
-	"lastName": "'.Input::get('lastname').'",
-	"nickName": null,
-	"mobileNumber": "",
-	"emailAddress": "'.Input::get('email').'",
-	"isPrivacyPolicyAccepted": true,
-	"preferredNotification": 1,
-	"receivePromotions": true,
-	"cardItems": [],
-	"accountItems": [],
-	"zipCode": "'.Input::get('zipcode').'",
-	"optInForCommunicationChannel": false,
-	"optInForSurveys": false,
-	"optInForProgramChanges": false,
-	"optInForContests": false,
-	"optInForOtherMarketingMessages": false,
-	"notificationPreferences": {
-		"AppNotificationPreferences_OfferExpirationOption": 0,
-		"EmailNotificationPreferences_LimitedTimeOffers": false,
-		"AppNotificationPreferences_Enabled": false,
-		"EmailNotificationPreferences_EverydayOffers": false,
-		"EmailNotificationPreferences_YourOffers": false,
-		"AppNotificationPreferences_YourOffers": false,
-		"AppNotificationPreferences_PunchcardOffers": false,
-		"AppNotificationPreferences_LimitedTimeOffers": false,
-		"EmailNotificationPreferences_OfferExpirationOption": 0,
-		"EmailNotificationPreferences_Enabled": false,
-		"EmailNotificationPreferences_PunchcardOffers": false,
-		"AppNotificationPreferences_EverydayOffers": false
-	},
-	"preferredOfferCategories": [],
-	"subscribedToOffer": true,
-	"isActive": true
-}';
+					"marketId": "US",
+					"application": "MOT",
+					"languageName": "en-US",
+					"platform": "iphone",
+					"userName": "'.Input::get('email').'",
+					"password": "helloworlD1",
+					"firstName": "'.Input::get('firstname').'",
+					"lastName": "'.Input::get('lastname').'",
+					"nickName": null,
+					"mobileNumber": "",
+					"emailAddress": "'.Input::get('email').'",
+					"isPrivacyPolicyAccepted": true,
+					"preferredNotification": 1,
+					"receivePromotions": true,
+					"cardItems": [],
+					"accountItems": [],
+					"zipCode": "'.Input::get('zipcode').'",
+					"optInForCommunicationChannel": false,
+					"optInForSurveys": false,
+					"optInForProgramChanges": false,
+					"optInForContests": false,
+					"optInForOtherMarketingMessages": false,
+					"notificationPreferences": {
+						"AppNotificationPreferences_OfferExpirationOption": 0,
+						"EmailNotificationPreferences_LimitedTimeOffers": false,
+						"AppNotificationPreferences_Enabled": false,
+						"EmailNotificationPreferences_EverydayOffers": false,
+						"EmailNotificationPreferences_YourOffers": false,
+						"AppNotificationPreferences_YourOffers": false,
+						"AppNotificationPreferences_PunchcardOffers": false,
+						"AppNotificationPreferences_LimitedTimeOffers": false,
+						"EmailNotificationPreferences_OfferExpirationOption": 0,
+						"EmailNotificationPreferences_Enabled": false,
+						"EmailNotificationPreferences_PunchcardOffers": false,
+						"AppNotificationPreferences_EverydayOffers": false
+					},
+					"preferredOfferCategories": [],
+					"subscribedToOffer": true,
+					"isActive": true
+				}';
 
 				$r = $client->request('POST', 'https://api.mcd.com/v3/customer/registration', [
 					'headers' => [
@@ -215,10 +211,12 @@ class PageController extends BaseController {
 	    	exit();
     	}
 	}
-
+	public function register() {
+		$data['title'] = "Register";
+		return View::make('user.register', compact('data'));
+	}
 	public function login() {
 		$data['title'] = "Login";
 		return View::make('user.login', compact('data'));
 	}
-
 }
