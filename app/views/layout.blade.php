@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>McAttack</title>
-    {{HTML::style('http://bootswatch.com/simplex/bootstrap.min.css')}}
+    {{HTML::style('http://bootswatch.com/journal/bootstrap.min.css')}}
     @yield('append_css')
     {{HTML::script('https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js')}}
     {{HTML::script('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')}}
@@ -15,35 +15,22 @@
 		width: 250px;
 	}
 	body {
-		margin-top: 60px;
+		margin-top: 70px;
+    background: url('http://subtlepatterns2015.subtlepatterns.netdna-cdn.com/patterns/food.png');
 	}
+  .well {
+    background: #fff;
+    border: none;
+  }
+  .alert-red {
+    background: #FFC8C8;
+    margin-bottom: 0px;
+    color: #A24C4C;
+  }
 	</style>
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">McAttack</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-          </ul>
-           <ul class="nav navbar-nav navbar-right">
-           	<li><a href="#">Register</a></li>
-           	<li><a href="#">Login</a></li>
-           </ul>
-
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
-    @include('nav')
+  @include('nav')
 	<div class="container">
 		@yield('content')
 	</div>
