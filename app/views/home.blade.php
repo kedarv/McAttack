@@ -46,5 +46,5 @@ $(document).ready(function(){
 		<p class="list-group-item-text">Valid from {{date('n/d/Y', strtotime($item['LocalValidFrom']))}} to {{date('n/d/Y', strtotime($item['LocalValidThru']))}}</p></a>
     @endforeach
   </div>
-  <div class="alert alert-red">Code not working? You can download the McDonalds App and login using the email <b>{{$data['email']}}</b> and password <b>helloworlD1</b></div>
+  <div class="alert alert-red">Code not working? You can download the McDonalds App and login using the email <code>{{$data['email']}}</code> and password <code>helloworlD1</code></div>
 @stop
