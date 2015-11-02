@@ -10,6 +10,24 @@ class PageController extends BaseController {
 		$renderer = new PngRenderer();
 		return "data:png;base64,". base64_encode($renderer->render($code));
 	}
+	public function incrementAccount() {
+		if (Cache::has('accountID')) {
+			$id = Cache::pull('accountID') + 1;
+			Cache::put('accountID', $id, Carbon::now()->addYears(4)); // stupid workaround
+		}
+		else {
+			Cache::put('accountID', 0, Carbon::now()->addYears(4)); // stupid workaround
+		}
+		return Redirect::to('/')->with('message', 'Refreshed accounts');
+	}
+
+	public function getAccountID() {
+		if (!Cache::has('accountID')) {
+			Cache::put('accountID', 0, Carbon::now()->addYears(4));
+		}
+		return Cache::get('accountID');
+	}
+
 	public function generateCoupon() {
 		$email = Input::get('email');
 		$id = Input::get('id');
@@ -39,9 +57,9 @@ class PageController extends BaseController {
 		// 	$this->doRegisterAuto($string);
 		// }
 
-		$data = "";
+		$data['email'] = "test@api" . $this->getAccountID() . ".com";
 		// Cache token
-		$arr = $this->getAvailableOffers("test@api14.com");
+		$arr = $this->getAvailableOffers($data['email']);
 		//var_dump($arr);
 		return View::make('home', compact('data', 'arr'));
 	}

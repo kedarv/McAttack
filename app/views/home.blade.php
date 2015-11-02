@@ -7,7 +7,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		$.ajax({
 			url: "{{action('PageController@generateCoupon')}}",
-			data: {email: "test@api14.com", id: $(this).data('id')},
+			data: {email: "{{$data['email']}}", id: $(this).data('id')},
 			type: "POST",
 			beforeSend: function(request) {
 				return request.setRequestHeader('X-CSRF-Token', $("meta[name='token']").attr('content'));
@@ -27,6 +27,9 @@ $(document).ready(function(){
 @stop
 
 @section('content')
+@if(Session::has('message'))
+	<div class="alert alert-info">{{ Session::get('message') }}</div>
+@endif
   <div class="well">
   	<div id="coupon" style="display:none;">
     <img src="" class="aztec">
@@ -34,6 +37,7 @@ $(document).ready(function(){
     <h3 id="code"></h3>
     <hr/>
     </div>
+   	<a href="{{action('PageController@incrementAccount')}}">Don't see the Free sandwich deal? Click here (automated increment coming soon)</a>
     <h3>Offers Available:</h3>
     <div class="list-group">
     @foreach($arr['Data'] as $item)

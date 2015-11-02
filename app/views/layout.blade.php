@@ -12,7 +12,7 @@
     @yield('append_headjs')
 	<style>
 	.aztec {
-		width: 20%;
+		width: 250px;
 	}
 	body {
 		margin-top: 60px;
