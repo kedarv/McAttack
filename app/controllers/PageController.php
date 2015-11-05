@@ -23,10 +23,13 @@ class PageController extends BaseController {
 		return $account;
 	}
 
-	public function generateCoupon() {
+	public function generateCoupon($params = NULL) {
 		$email = Input::get('email');
 		$id = Input::get('id');
-	
+		if(isset($params['email']) && isset($params['id'])) {
+			$email = $params['email'];
+			$id = $params['id'];
+		}
 		$client = new \GuzzleHttp\Client();
 		$body = '{"marketId":"US","application":"MOT","languageName":"en-US","platform":"iphone","offersIds":["'.$id.'"],"storeId":26511,"userName":"'.$email.'"}';
 		$r = $client->request('POST', 'https://api.mcd.com//v3//customer/offer/redemption', [
@@ -48,10 +51,17 @@ class PageController extends BaseController {
 	}
 	public function home() {
 		$account = Account::where('used', '!=', 1)->first()->toArray();
-		$account['email'];
 		$arr = $this->getAvailableOffers($account['email']);
 		$data['email'] = $arr['email'];
+		//return $this->createPDF();
 		return View::make('home', compact('data', 'arr'));
+	}
+	public function generatePDF() {
+		$params = array("email" => Input::get('email'), "id" => Input::get('id'));
+		$coupon = $this->generateCoupon($params);
+		$data['name'] = "Hello";
+		$pdf = PDF::loadView("coupon_pdf", compact('data', 'coupon'));
+		return $pdf->stream();
 	}
 	public function getAvailableOffers($email) {
 		$formatted_email = str_replace("@", "%40", $email);

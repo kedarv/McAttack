@@ -5,6 +5,7 @@
 $(document).ready(function(){
 	$(".list-group-item").click(function(e){
 		e.preventDefault();
+		var id = $(this).data('id');
 		$.ajax({
 			url: "{{action('PageController@generateCoupon')}}",
 			data: {email: "{{$data['email']}}", id: $(this).data('id')},
@@ -15,12 +16,26 @@ $(document).ready(function(){
 			success: function (response) {
 				$("#code").html("Coupon Code: " + response['code']);
 				$(".aztec").attr('src', response['aztec']);
+				$("#pdf").attr('href', '{{action('PageController@generatePDF')}}' + '?email=' + '{{$data['email']}}' + '&id=' + id);
+				console.log(id)
 				$("#coupon").fadeIn();
 				console.log(response);
 			}
 		});
-
-		//alert($(this).data('id'));
+	});
+	$("#pdf").click(function(e){
+		e.preventDefault();
+		$.ajax({
+			url: "{{action('PageController@generatePDF')}}",
+			data: {email: "{{$data['email']}}", id: $(this).data('id')},
+			type: "POST",
+			beforeSend: function(request) {
+				return request.setRequestHeader('X-CSRF-Token', $("meta[name='token']").attr('content'));
+			},
+			success: function (response) {
+				console.log(response);
+			}
+		});
 	});
 })
 </script>
@@ -35,6 +50,7 @@ $(document).ready(function(){
     <img src="" class="aztec" style="margin: 0 auto; display: block;">
     <hr/>
     <h3 id="code"></h3>
+    <h3><a href="#" id="pdf">Download PDF</a> <small>(May become invalid after some time)</small>
     <hr/>
     </div>
     <h3>Offers Available:</h3>

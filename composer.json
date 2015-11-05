@@ -6,7 +6,8 @@
 	"require": {
 		"laravel/framework": "4.2.*",
 		"z38/metzli": "^1.0",
-		"guzzlehttp/guzzle": "^6.1"
+		"guzzlehttp/guzzle": "^6.1",
+		"barryvdh/laravel-dompdf": "0.4.*"
 	},
 	"autoload": {
 		"classmap": [

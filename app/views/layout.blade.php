@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>McAttack</title>
     {{HTML::style('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css')}}
-    {{HTML::style('http://fonts.googleapis.com/css?family=Raleway:800')}}
+    {{HTML::style('https://fonts.googleapis.com/css?family=Open+Sans:400,700,600')}}
     @yield('append_css')
     <style>
       h3 {
-        font-family: 'Raleway', sans-serif;
+        font-weight: 700;
         text-transform: uppercase;
         margin-top: 0px;
       }
@@ -18,6 +18,7 @@
         width: 250px;
       }
       body {
+        font-family: 'Roboto', sans-serif;
         margin-top: 20px;
         background: url('img/food.png');
       }
@@ -29,6 +30,9 @@
         background: #FFC8C8;
         margin-bottom: 0px;
         color: #A24C4C;
+      }
+      .list-group-item-heading {
+        font-weight: 300;
       }
     </style>
 
