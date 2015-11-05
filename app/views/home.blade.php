@@ -37,7 +37,6 @@ $(document).ready(function(){
     <h3 id="code"></h3>
     <hr/>
     </div>
-   	<a href="{{action('PageController@setUsedAccount')}}">Don't see the Free sandwich deal? Click here (automated increment coming soon)</a>
     <h3>Offers Available:</h3>
     <div class="list-group">
     @foreach($arr['Data'] as $item)

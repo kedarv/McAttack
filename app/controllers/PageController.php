@@ -48,8 +48,9 @@ class PageController extends BaseController {
 	}
 	public function home() {
 		$account = Account::where('used', '!=', 1)->first()->toArray();
-		$data['email'] = $account['email'];
-		$arr = $this->getAvailableOffers($data['email']);
+		$account['email'];
+		$arr = $this->getAvailableOffers($account['email']);
+		$data['email'] = $arr['email'];
 		return View::make('home', compact('data', 'arr'));
 	}
 	public function getAvailableOffers($email) {
@@ -65,7 +66,7 @@ class PageController extends BaseController {
 	    	'verify' => false,
 		]);
 		$arr = json_decode((string) $r->getBody(), true);
-
+		$arr['email'] = $email;
 		foreach($arr['Data'] as $item) {
 			if (strpos($item['Name'],'Free Breakfast or Regular') !== false) {
 				return $arr;
