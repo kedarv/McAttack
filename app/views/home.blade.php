@@ -32,7 +32,7 @@ $(document).ready(function(){
 @endif
   <div class="well">
   	<div id="coupon" style="display:none;">
-    <img src="" class="aztec">
+    <img src="" class="aztec" style="margin: 0 auto; display: block;">
     <hr/>
     <h3 id="code"></h3>
     <hr/>
