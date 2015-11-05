@@ -23,20 +23,6 @@ $(document).ready(function(){
 			}
 		});
 	});
-	$("#pdf").click(function(e){
-		e.preventDefault();
-		$.ajax({
-			url: "{{action('PageController@generatePDF')}}",
-			data: {email: "{{$data['email']}}", id: $(this).data('id')},
-			type: "POST",
-			beforeSend: function(request) {
-				return request.setRequestHeader('X-CSRF-Token', $("meta[name='token']").attr('content'));
-			},
-			success: function (response) {
-				console.log(response);
-			}
-		});
-	});
 })
 </script>
 @stop
