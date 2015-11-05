@@ -10,22 +10,16 @@ class PageController extends BaseController {
 		$renderer = new PngRenderer();
 		return "data:png;base64,". base64_encode($renderer->render($code));
 	}
-	public function incrementAccount() {
-		if (Cache::has('accountID')) {
-			$id = Cache::pull('accountID') + 1;
-			Cache::put('accountID', $id, Carbon::now()->addYears(4)); // stupid workaround
-		}
-		else {
-			Cache::put('accountID', 0, Carbon::now()->addYears(4)); // stupid workaround
-		}
+	public function setUsedAccount() {
+		$account = Account::where('used', '!=', 1)->first();
+		$account->used = 1;
+		$account->save();
 		return Redirect::to('/')->with('message', 'Refreshed accounts');
 	}
 
-	public function getAccountID() {
-		if (!Cache::has('accountID')) {
-			Cache::put('accountID', 0, Carbon::now()->addYears(4));
-		}
-		return Cache::get('accountID');
+	public function getAccount() {
+		$account = Account::where('used', '!=', 1)->first()->toArray();
+		return $account;
 	}
 
 	public function generateCoupon() {
@@ -52,15 +46,9 @@ class PageController extends BaseController {
 		return $data;
 	}
 	public function home() {
-		// for($i = 100; $i <= 100; $i++) {
-		// 	$string = "test@api" . $i . ".com";
-		// 	$this->doRegisterAuto($string);
-		// }
-
-		$data['email'] = "test@api" . $this->getAccountID() . ".com";
-		// Cache token
+		$account = Account::where('used', '!=', 1)->first()->toArray();
+		$data['email'] = $account['email'];
 		$arr = $this->getAvailableOffers($data['email']);
-		//var_dump($arr);
 		return View::make('home', compact('data', 'arr'));
 	}
 	public function getAvailableOffers($email) {
@@ -171,7 +159,7 @@ class PageController extends BaseController {
 			'headers' => [
 				'Content-Type' => 'application/json',
 		  		'mcd_apikey'     => 'lvi2NZIVT42AytkqXm6E2BApBU369jpp',
-		  		'Token'      => '9efcc6dc92eb4fdf9eb6e8803deceffd',
+		  		'Token'      => $this->getSessionToken(),
 		  		'MarketId' => 'US'
 		 	],
 			'verify' => false,
@@ -295,6 +283,13 @@ class PageController extends BaseController {
 	    	exit();
     	}
 	}
+	public function generateAccounts() {
+		$user = str_random(2);
+		$domain = str_random(2) . ".com";
+		$email = $user . "@" . $domain;
+		return $this->doRegisterAuto($email);
+	}
+
 	public function register() {
 		$data['title'] = "Register";
 		return View::make('user.register', compact('data'));
