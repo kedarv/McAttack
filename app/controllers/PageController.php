@@ -5,17 +5,19 @@ use GuzzleHttp\Client;
 use Carbon\Carbon;
 
 class PageController extends BaseController {
+	// Generate base64 encoded Aztec QR code given a string
 	public function generateAztecImage($string) {
 		$code = Encoder::encode($string);
 		$renderer = new PngRenderer();
 		return "data:png;base64,". base64_encode($renderer->render($code));
 	}
+	// Mark current account as used
 	public function setUsedAccount() {
 		$account = Account::where('used', '!=', 1)->first();
 		$account->used = 1;
 		$account->save();
 	}
-
+	// Get current account
 	public function getAccount() {
 		$account = Account::where('used', '!=', 1)->first()->toArray();
 		return $account;
