@@ -14,7 +14,6 @@ class PageController extends BaseController {
 		$account = Account::where('used', '!=', 1)->first();
 		$account->used = 1;
 		$account->save();
-		return Redirect::to('/')->with('message', 'Refreshed accounts');
 	}
 
 	public function getAccount() {
@@ -64,7 +63,14 @@ class PageController extends BaseController {
 	    	'verify' => false,
 		]);
 		$arr = json_decode((string) $r->getBody(), true);
-		return $arr;
+
+		foreach($arr['Data'] as $item) {
+			if (strpos($item['Name'],'Free Breakfast or Regular') !== false) {
+				return $arr;
+			}
+		}
+		$this->setUsedAccount();
+		return $this->getAvailableOffers($this->getAccount()['email']);
 	}
 	public function getSessionToken() {
 		if (Cache::has('sessionToken')) {
