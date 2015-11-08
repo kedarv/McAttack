@@ -61,7 +61,7 @@ class PageController extends BaseController {
 		$coupon = $this->generateCoupon($params);
 		$data['name'] = "Hello";
 		$pdf = PDF::loadView("coupon_pdf", compact('data', 'coupon'));
-		return $pdf->stream();
+		return $pdf->download('coupon.pdf');
 	}
 	public function getAvailableOffers($email) {
 		$formatted_email = str_replace("@", "%40", $email);

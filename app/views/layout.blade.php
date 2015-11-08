@@ -20,7 +20,7 @@
       body {
         font-family: 'Roboto', sans-serif;
         margin-top: 20px;
-        background: url('img/food.png');
+        background: #000;
       }
       .well {
         background: #fff;
