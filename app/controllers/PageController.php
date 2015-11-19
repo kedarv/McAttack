@@ -49,11 +49,27 @@ class PageController extends BaseController {
 		$data['code'] = $arr['Data']['RandomCode'];
 		return $data;
 	}
+	public function getLocation($ip) {
+		$url = "http://ip-api.com/json/" . $ip;
+		$client = new \GuzzleHttp\Client();
+		$res = $client->request('GET', $url);
+		$array = json_decode((string)$res->getBody(), true);
+		if($array['city'] == "West Lafayette" || $array['city'] == "Lafayette") {
+			return true;
+		}
+		return false;
+	}
 	public function home() {
-		$account = Account::where('used', '!=', 1)->first()->toArray();
-		$arr = $this->getAvailableOffers($account['email']);
-		$data['email'] = $arr['email'];
-		return View::make('home', compact('data', 'arr'));
+		$validLocation = $this->getLocation($_SERVER['REMOTE_ADDR']);
+		if($validLocation) {
+			$account = Account::where('used', '!=', 1)->first()->toArray();
+			$arr = $this->getAvailableOffers($account['email']);
+			$data['email'] = $arr['email'];
+			return View::make('home', compact('data', 'arr'));
+		}
+		else {
+			return View::make('noaccess');
+		}
 	}
 	public function generatePDF() {
 		$params = array("email" => Input::get('email'), "id" => Input::get('id'));
