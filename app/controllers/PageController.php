@@ -60,15 +60,27 @@ class PageController extends BaseController {
 		return false;
 	}
 	public function home() {
-		$validLocation = $this->getLocation($_SERVER['REMOTE_ADDR']);
-		if($validLocation) {
-			$account = Account::where('used', '!=', 1)->first()->toArray();
-			$arr = $this->getAvailableOffers($account['email']);
-			$data['email'] = $arr['email'];
-			return View::make('home', compact('data', 'arr'));
+		$now = time();
+		$dw = date("N", $now);
+		if($dw >= 0) {
+				$account = Account::where('used', '!=', 1)->first()->toArray();
+				$arr = $this->getAvailableOffers($account['email']);
+				$data['weekend'] = 1;
+				$data['email'] = $arr['email'];
+				return View::make('home', compact('data', 'arr'));
 		}
 		else {
-			return View::make('noaccess');
+			$validLocation = $this->getLocation($_SERVER['REMOTE_ADDR']);
+			if($validLocation) {
+				$account = Account::where('used', '!=', 1)->first()->toArray();
+				$arr = $this->getAvailableOffers($account['email']);
+				$data['email'] = $arr['email'];
+				$data['weekend'] = 0;
+				return View::make('home', compact('data', 'arr'));
+			}
+			else {
+				return View::make('noaccess');
+			}
 		}
 	}
 	public function generatePDF() {
