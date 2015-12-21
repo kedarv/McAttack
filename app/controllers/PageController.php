@@ -60,28 +60,12 @@ class PageController extends BaseController {
 		return false;
 	}
 	public function home() {
-		$now = time();
-		$dw = date("N", $now);
-		if($dw >= 0) {
-				$account = Account::where('used', '!=', 1)->first()->toArray();
-				$arr = $this->getAvailableOffers($account['email']);
-				$data['weekend'] = 1;
-				$data['email'] = $arr['email'];
-				return View::make('home', compact('data', 'arr'));
-		}
-		else {
-			$validLocation = $this->getLocation($_SERVER['REMOTE_ADDR']);
-			if($validLocation) {
-				$account = Account::where('used', '!=', 1)->first()->toArray();
-				$arr = $this->getAvailableOffers($account['email']);
-				$data['email'] = $arr['email'];
-				$data['weekend'] = 0;
-				return View::make('home', compact('data', 'arr'));
-			}
-			else {
-				return View::make('noaccess');
-			}
-		}
+		$this->generateAccounts();
+		exit;
+		$account = Account::where('used', '!=', 1)->first()->toArray();
+		$arr = $this->getAvailableOffers($account['email']);
+		$data['email'] = $arr['email'];
+		return View::make('home', compact('data', 'arr'));
 	}
 	public function generatePDF() {
 		$params = array("email" => Input::get('email'), "id" => Input::get('id'));
@@ -225,9 +209,9 @@ class PageController extends BaseController {
 	    else {
 	    	$response = array('status' => 'danger', 'text' => 'MCD API error');
 	    }
-		
+		var_dump($response);
 		return Response::json($response); 
-		exit();	
+
 	}
 	
 	public function generateAccounts() {
