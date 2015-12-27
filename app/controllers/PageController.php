@@ -127,7 +127,7 @@ class PageController extends BaseController {
 		}
 		return $token;
 	}
-	public function doRegisterAuto($string) {
+	public function doRegister($string) {
 	    $client = new \GuzzleHttp\Client();
 
 	    $body = '{
@@ -205,6 +205,6 @@ class PageController extends BaseController {
 		$user = str_random(2);
 		$domain = str_random(2) . ".com";
 		$email = $user . "@" . $domain;
-		return $this->doRegisterAuto($email);
+		return $this->doRegister($email);
 	}
 }
