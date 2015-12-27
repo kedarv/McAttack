@@ -60,8 +60,6 @@ class PageController extends BaseController {
 		return false;
 	}
 	public function home() {
-		$this->generateAccounts();
-		exit;
 		$account = Account::where('used', '!=', 1)->first()->toArray();
 		$arr = $this->getAvailableOffers($account['email']);
 		$data['email'] = $arr['email'];
@@ -209,7 +207,6 @@ class PageController extends BaseController {
 	    else {
 	    	$response = array('status' => 'danger', 'text' => 'MCD API error');
 	    }
-		var_dump($response);
 		return Response::json($response); 
 
 	}
