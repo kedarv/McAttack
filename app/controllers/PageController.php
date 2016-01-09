@@ -5,6 +5,7 @@ use GuzzleHttp\Client;
 use Carbon\Carbon;
 
 class PageController extends BaseController {
+
 	// Generate base64 encoded Aztec QR code given a string
 	public function generateAztecImage($string) {
 		$code = Encoder::encode($string);
@@ -23,6 +24,7 @@ class PageController extends BaseController {
 		return $account;
 	}
 
+	// Create Aztec Code
 	public function generateCoupon($params = NULL) {
 		$email = Input::get('email');
 		$id = Input::get('id');
@@ -55,12 +57,16 @@ class PageController extends BaseController {
 		$data['email'] = $arr['email'];
 		return View::make('home', compact('data', 'arr'));
 	}
+
+	// Generate PDF Coupon given email and offer ID
 	public function generatePDF() {
 		$params = array("email" => Input::get('email'), "id" => Input::get('id'));
 		$coupon = $this->generateCoupon($params);
 		$pdf = PDF::loadView("coupon_pdf", compact('coupon'));
 		return $pdf->download('coupon.pdf');
 	}
+
+	// Get all available offers an account has
 	public function getAvailableOffers($email) {
 		$formatted_email = str_replace("@", "%40", $email);
 		$url = 'https://api.mcd.com/v3//customer/offer?marketId=US&application=MOT&languageName=en-US&platform=iphone&userName='.$formatted_email.'';
@@ -83,6 +89,8 @@ class PageController extends BaseController {
 		$this->setUsedAccount();
 		return $this->getAvailableOffers($this->getAccount()['email']);
 	}
+
+	// Create guest session token
 	public function getSessionToken() {
 		if (Cache::has('sessionToken')) {
 			$token = Cache::get('sessionToken');
@@ -105,6 +113,8 @@ class PageController extends BaseController {
 		}
 		return $token;
 	}
+
+	// Authenticate account and store session token
 	public function getSignInSessionToken($email) {
 		if (Cache::has($email)) {
 			$token = Cache::get($email);
@@ -127,6 +137,8 @@ class PageController extends BaseController {
 		}
 		return $token;
 	}
+
+	// Generate account with an email address and store in database
 	public function doRegister($string) {
 	    $client = new \GuzzleHttp\Client();
 
@@ -186,11 +198,11 @@ class PageController extends BaseController {
 		$arr = json_decode((string) $r->getBody(), true);
 		if($arr['ResultCode'] == 1) {
 			$account = new Account;
-			$account->firstname = "TestFirst";
-			$account->lastname = "TestLast";
-			$account->zipcode = "47906";
+			$account->firstname = "FirstName";
+			$account->lastname = "LastName";
+			$account->zipcode = "12345";
 			$account->email = $string;
-			$account->password = "helloworlD1";
+			$account->password = "passworD1";
 			$account->save();
 	    	$response = array('status' => 'success', 'text' => 'Success');
 	    }
@@ -198,9 +210,9 @@ class PageController extends BaseController {
 	    	$response = array('status' => 'danger', 'text' => 'MCD API error');
 	    }
 		return Response::json($response); 
-
 	}
 	
+	// Helper function to generate an account
 	public function generateAccounts() {
 		$user = str_random(2);
 		$domain = str_random(2) . ".com";
