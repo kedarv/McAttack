@@ -37,7 +37,7 @@ class PageController extends BaseController {
 		$r = $client->request('POST', 'https://api.mcd.com//v3//customer/offer/redemption', [
 			'headers' => [
 	        	'Content-Type' => 'application/json',
-	        	'mcd_apikey'     => 'lvi2NZIVT42AytkqXm6E2BApBU369jpp',
+	        	'mcd_apikey'     => Config::get('api.mcd_apikey'),
 	        	'Token'      => $this->getSignInSessionToken($email),
 	        	'MarketId' => 'US'
 	    	],
@@ -52,6 +52,7 @@ class PageController extends BaseController {
 		return $data;
 	}
 	public function home() {
+		$this->generateAccounts();
 		$account = Account::where('used', '!=', 1)->first()->toArray();
 		$arr = $this->getAvailableOffers($account['email']);
 		$data['email'] = $arr['email'];
@@ -73,7 +74,7 @@ class PageController extends BaseController {
 		$client = new \GuzzleHttp\Client();
 		$r = $client->request('GET', $url, [
 			'headers' => [
-	     		'mcd_apikey' => 'lvi2NZIVT42AytkqXm6E2BApBU369jpp',
+	     		'mcd_apikey' => Config::get('api.mcd_apikey'),
 	     		'Token' => $this->getSignInSessionToken($email),
 	     		'MarketId' => 'US'
 	    	],
@@ -100,7 +101,7 @@ class PageController extends BaseController {
 			$r = $client->request('POST', 'https://api.mcd.com/v3//customer/session', [
 				'headers' => [
 	        		'Content-Type' => 'application/json',
-	        		'mcd_apikey'     => 'lvi2NZIVT42AytkqXm6E2BApBU369jpp',
+	        		'mcd_apikey'     => Config::get('api.mcd_apikey'),
 	        		'MarketId' => 'US'
 	    		],
 	    		'verify' => false,
@@ -124,7 +125,7 @@ class PageController extends BaseController {
 			$r = $client->request('POST', 'https://api.mcd.com/v3//customer/session/sign-in-and-authenticate', [
 				'headers' => [
 	        		'Content-Type' => 'application/json',
-	        		'mcd_apikey'     => 'lvi2NZIVT42AytkqXm6E2BApBU369jpp',
+	        		'mcd_apikey'     => Config::get('api.mcd_apikey'),
 	        		'MarketId' => 'US'
 	    		],
 	    		'verify' => false,
@@ -187,7 +188,7 @@ class PageController extends BaseController {
 		$r = $client->request('POST', 'https://api.mcd.com/v3/customer/registration', [
 			'headers' => [
 				'Content-Type' => 'application/json',
-		  		'mcd_apikey'     => 'lvi2NZIVT42AytkqXm6E2BApBU369jpp',
+		  		'mcd_apikey'     => Config::get('api.mcd_apikey'),
 		  		'Token'      => $this->getSessionToken(),
 		  		'MarketId' => 'US'
 		 	],
